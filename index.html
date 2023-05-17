@@ -32,7 +32,7 @@
     }
     /* 全体のフォント設定 */
     body {
-      background-color: rgba(0, 0, 0, 0.2); /* 背景を淡い黒に設定 */
+      background-color: rgba(100, 250, 100, 1); /* 背景を初期の透明な黒に設定 */
       color: #000000; /* 文字を白に設定 */
       font-family: 'HG行書体', sans-serif;
     }
@@ -67,37 +67,36 @@
       </div>
       <div class="col-sm-4">
         <div class="image-container fade-in">
-            <h3>プログラムの巻</h3>
+            <h2>プログラムの巻</h2>
           <img src="タイトルなし.png" alt="代替テキスト" width="440" height="260">
-          <p>作品名~五分後起こして~<br>二年になりたての僕の渾身の一作だ。寝る前にこいつに話したことをそのまま返してくる優れモノだ。<br>これで寝坊が治る。</p>
+          <h5>作品名五分後起こして</h5>
+          <p>二年になりたての僕の渾身の一作だ。寝る前にこいつに話したことをそのまま返してくる優れモノだ。<br>これで寝坊が治る。</p>
         </div>
       </div>
       <div class="col-sm-4">
         <div class="image-container fade-in">
-            <h2>電子回路の巻</h2>
+          <h2>電子回路の巻</h2>
           <img src="20230112_133446.jpg" alt="代替テキスト" width="440" height="260">
-          <p>作品名~近づくとヒカル~<br>一年最後に作った渾身の一作だ。<br>しかしまだまだ発展の可能性がある技術、改良の余地あり。</p>
+          <p>作品名近づくとヒカル<br>一年最後に作った渾身の一作だ。<br>しかしまだまだ発展の可能性がある技術、改良の余地あり。</p>
         </div>
       </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
-            <div class="image-container fade-in">
-              <img src="1682670902313.jpg" alt="代替テキスト" width="400" height="200">
-          </div>
+      <div class="col-sm-6">
+        <div class="image-container fade-in">
+          <img src="1682670902313.jpg" alt="代替テキスト" width="400" height="200">
         </div>
-        <div class="col-sm-6">
-          <div class="image-container fade-in">
-            <p>川上大心のステータス</p>
-            <p>ビジネス情報部門～情報処理検定2級<br>全商簿記2級<br>珠算・電卓実務検定試験１級<br>その他三級いくつか</p>
+      </div>
+      <div class="col-sm-6">
+        <div class="image-container fade-in">
+          <p>川上大心のステータス</p>
+          <p>ビジネス情報部門～情報処理検定2級<br>全商簿記2級<br>珠算・電卓実務検定試験１級<br>その他三級いくつか</p>
         </div>
-            
-        </div>
+      </div>
     </div>
   </div>
-
-  <script>
-    const fadeinElems = document.querySelectorAll('.fade-in');
+<script>
+               const fadeinElems = document.querySelectorAll('.fade-in');
     let currentIndex = 0;
 
     function fadein() {
@@ -118,8 +117,31 @@ window.addEventListener('load', function () {
 });
 
 document.addEventListener('click', fadein);
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-```
+              // スクロールに応じて背景色を変化させる
+              window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const body = document.querySelector('body');
+                
+                // 背景色の変化に使用するパラメータ
+                const startScroll = 0;
+                const endScroll = 500;
+                const startColor = [250, 250, 100];
+                const endColor = [250, 100, 100];
+          
+                // スクロール位置に応じて背景色を計算する
+                const ratio = (scrollTop - startScroll) / (endScroll - startScroll);
+                const currentColor = endColor.map((value, index) => {
+                  const startValue = startColor[index];
+                  return Math.round(startValue + (value - startValue) * ratio);
+                });
+                
+                // 背景色を設定する
+                body.style.backgroundColor = `rgb(${currentColor[0]}, ${currentColor[1]}, ${currentColor[2]})`;
+              });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+          
+  </body>
+  </html>
+          ```
+
