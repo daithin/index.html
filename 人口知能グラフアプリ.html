@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>  
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+<div id="app">
+  <div>
+    <span v-for="pref in prefectures">
+      <input
+        v-on:change="changeGraph($event.target.checked, pref.prefCode)"
+        type="checkbox"
+      >
+      {{ pref.prefName }}
+    </span>
+  </div>
+  <p>Prefecture Code: {{ prefCode }}</p>
+  <p>Prefecture: {{ getPrefectureName(prefCode) }}</p>
+  <p v-if="!jsonData">Loading ...</p>
+  <div v-else>
+    <ul>
+      <li v-for="prefData in jsonData">
+        {{ prefData.year }} : <span v-bind:style="{ display: 'inline-block', 'background-color': 'gray', width: (prefData.value / 10000) + 'px', height: '10px' }"></span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+Vue.createApp({
+  data() {
+    return {
+      prefCode: 1,
+      jsonData: null,
+      prefectures: [],
+    };
+  },
+
+  methods: {
+    changeGraph(checked, prefCode) {
+      if (checked) {
+        this.prefCode = prefCode;
+        this.fetchData();
+      }
+    },
+
+    async fetchPrefectures() {
+      const options = {
+        headers: {
+          'X-API-KEY': 'cmDhoz7xBJ3B8voetEPlmYDAjkQE1fijkSIF7yJv',
+        },
+      };
+
+      const res = await fetch(
+        'https://opendata.resas-portal.go.jp/api/v1/prefectures',
+        options,
+      );
+
+      const data = await res.json();
+      this.prefectures = data.result;
+    },
+
+    async fetchData() {
+      this.jsonData = null;
+
+      const options = {
+        headers: {
+          'X-API-KEY': 'cmDhoz7xBJ3B8voetEPlmYDAjkQE1fijkSIF7yJv',
+        },
+      };
+
+      const res = await fetch(
+        `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${this.prefCode}`,
+        options,
+      );
+
+      this.jsonData = await res.json();
+      // 事前の jsonData すなわち RESAS API の生のデータから ...
+      //
+      // .result -> result というプロパティをたどり ...
+      // .data   -> さらに data というプロパティをたどり ...
+      // [0]     -> ↑が配列になるので、その最初の要素を取り ...
+      // .data   -> 年 / 数値だけの配列まで取り出す
+      this.jsonData = this.jsonData.result.data[0].data;
+    },
+    
+    getPrefectureName(prefCode) {
+      const prefecture = this.prefectures.find(pref => pref.prefCode === prefCode);
+      return prefecture ? prefecture.prefName : '';
+    }
+  },
+
+  mounted() {
+    this.fetchPrefectures();
+    this.fetchData();
+  },
+}).mount('#app')
+</script>
+
+</body>
+
+</html>
